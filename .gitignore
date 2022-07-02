@@ -1,2 +1,5 @@
 /senv/
 .idea
+__pycache__/
+logs.txt
+.bash_history
