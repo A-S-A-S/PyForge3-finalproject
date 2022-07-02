@@ -4,7 +4,7 @@ Simple containerized CLI python app to obtain and retrieve some data.
 
 __NB:__ still WIP
 
-##How to use
+## How to use
 First of all, you need docker and docker-compose installed on your machine.<br>
 When all done, clone this repo and simply run from the root folder:
 ```
@@ -33,7 +33,7 @@ Choose thing you want me to do :
 
 Enter your choice :
 ```
-##TODO:
+## TODO:
 - Handle DB errors
 - Decide about entry point
 - Create the unit tests
