@@ -10,7 +10,7 @@ WORKDIR /home/app
 
 COPY ./requirements.txt ./
 
-RUN apt-get update && apt-get install -y netcat
+RUN apt-get update
 RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -18,6 +18,4 @@ USER app
 
 COPY . .
 
-# ENTRYPOINT ["./entrypoint.sh"]
-# ENTRYPOINT [ "python", "main.py" ]
 ENTRYPOINT ["bash"]

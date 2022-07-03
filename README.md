@@ -2,7 +2,6 @@
 
 Simple containerized CLI python app to obtain and retrieve some data.
 
-__NB:__ still WIP
 
 ## How to use
 First of all, you need docker and docker-compose installed on your machine.<br>
@@ -33,8 +32,8 @@ Choose thing you want me to do :
 
 Enter your choice :
 ```
+## Tests
+Call _pytest_ from the root directory of repository.
+
 ## TODO:
-- Handle DB errors
 - Decide about entry point
-- Create the unit tests
-- Restructure the project if necessary 

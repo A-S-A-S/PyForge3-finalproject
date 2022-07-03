@@ -3,9 +3,9 @@ version: "3.8"
 services:
   app:
     container_name: PyForgeApp
-    build: ./services
+    build: ./src
     volumes:
-      - ./services/:/home/app
+      - ./src/:/home/app
     env_file:
       - .env.dev
     depends_on:

@@ -13,37 +13,40 @@ COMPOUNDS = {"ADP", "ATP", "STI", "ZID", "DPM", "XP9", "18W", "29P"}
 DB_URL = os.environ.get('DATABASE_URL')
 logging.basicConfig(filename='logs.txt', filemode='w', level=logging.INFO)
 
-engine = create_engine(DB_URL, echo=False)
-Base = declarative_base()
+if not DB_URL:
+    print("Something wrong with DB URI, couldn't start")
+else:
+    engine = create_engine(DB_URL, echo=False)
+    Base = declarative_base()
 
 
-class Compound(Base):
-    __tablename__ = 'compounds'
+    class Compound(Base):
+        __tablename__ = 'compounds'
 
-    compound = Column(String, primary_key=True)  # works with id and name
-    name = Column(String)
-    formula = Column(String)
-    inchi = Column(String)
-    inchi_key = Column(String)
-    smiles = Column(String)
-    cross_links_count = Column(Integer)
+        compound = Column(String, primary_key=True)
+        name = Column(String)
+        formula = Column(String)
+        inchi = Column(String)
+        inchi_key = Column(String)
+        smiles = Column(String)
+        cross_links_count = Column(Integer)
 
 
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
 
-Session = sessionmaker(bind=engine)
+    Session = sessionmaker(bind=engine)
 
 def get_info(key="ADP"):
     """
     Get info from "BASE_URL" for a stated "key"
-    :param key: Compound of interest code
+    :param key: Compound of interest code. By default it is the first one of COMPOUNDS tuple.
     :return: pandas.Series filled with full response
     """
     response = requests.get(urljoin(BASE_URL, key)).json()
     logging.info(f"Response got: {response}")
     sr = json_normalize(response, key).iloc[0]
-    logging.debug(f"Series we got: {sr}")
+    logging.info(f"Series we got: {sr}")
     return sr
 
 
@@ -55,9 +58,8 @@ def save_info(compounds: tuple) -> None:
     :return: None
     """
     for x in COMPOUNDS:
-        print("Now is", x)
+        print("Now processing", x)
         sr = get_info(x)
-        # df.to_sql('compounds', con=engine, if_exists='append', index=False)
         x = Compound(
             compound=x,
             name=sr["name"],
@@ -68,8 +70,11 @@ def save_info(compounds: tuple) -> None:
             cross_links_count=len(sr["cross_links"])
         )
         with Session() as session:
-            session.add(x)
-            session.commit()
+            if session.query(Compound.compound).filter_by(compound=x.compound).scalar() is None:
+                session.add(x)
+                session.commit()
+            else:
+                print("This one exists and I won't update it that way.")
         sleep(1)
 
 
