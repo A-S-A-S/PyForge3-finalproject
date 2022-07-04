@@ -6,7 +6,7 @@ p = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
 sys.path.append(p)
 
 from data import get_info
-from pandas import read_pickle, testing
+from pandas import read_pickle
 
 def test_correct_compound_passed_to_get_info():
     """
@@ -23,8 +23,7 @@ def test_no_compound_passed_to_get_info():
     """
     _ = os.path.join(os.path.dirname(__file__), "ADP.pkl")
     expected = read_pickle(_)
-    print(expected["name"],"AND", get_info()["name"])
-    #assert get_info()["name"] == expected["name"]
+    assert get_info()["name"] == expected["name"]
 
 def test_incorrect_compound_passed_to_get_info():
     """
